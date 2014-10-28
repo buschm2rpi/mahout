@@ -30,24 +30,29 @@ import static org.apache.commons.lang.StringUtils.isNotBlank;
  **/
 class LuceneSeqFileHelper {
 
-  public static final String SEPARATOR_FIELDS = " ";
+  public static final String SEPARATOR_FIELDS = ";";
+  public static final String SEPARATOR_VALUES = ",";
   public static final int USE_TERM_INFOS = 1;
 
   private LuceneSeqFileHelper() {}
 
-  public static void populateValues(Document document, Text theValue, List<String> fields) {
-
-    StringBuilder valueBuilder = new StringBuilder();
-    for (int i = 0; i < fields.size(); i++) {
-      String field = fields.get(i);
-      String fieldValue = document.get(field);
-      if (isNotBlank(fieldValue)) {
-        valueBuilder.append(fieldValue);
-        if (i != fields.size() - 1) {
-          valueBuilder.append(SEPARATOR_FIELDS);
+  public static void populateValues(final Document document, final Text theValue, final List<String> fields) {
+        final StringBuilder valueBuilder = new StringBuilder();
+        for (int i = 0; i < fields.size(); ++i) {
+            final String field = fields.get(i);
+            final String[] fieldValue = document.getValues(field);
+            if (fieldValue.length != 0) {
+                for (int j = 0; j < fieldValue.length; ++j) {
+                    valueBuilder.append(fieldValue[j]);
+                    if (j != fieldValue.length - 1) {
+                        valueBuilder.append(",");
+                    }
+                }
+                if (i != fields.size() - 1) {
+                    valueBuilder.append(";");
+                }
+            }
         }
-      }
-    }
-    theValue.set(Strings.nullToEmpty(valueBuilder.toString()));
+        theValue.set(Strings.nullToEmpty(valueBuilder.toString()));
   }
 }
