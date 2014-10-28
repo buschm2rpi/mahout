@@ -1,3 +1,7 @@
+WikiTweets branch is based on the mahout-0.9 release.
+
+-------------------------------------------------------------------------
+
 Welcome to Apache Mahout!
 
 Mahout is a scalable machine learning library that implements many different
